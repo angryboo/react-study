@@ -1,0 +1,28 @@
+.Movie {
+  width: 200px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+
+.movie-poster {
+  width: 150px;
+  height: 200px;
+  border: 1px solid rgba(151, 151, 151, 0.555);
+  border-radius: 5px;
+}
+
+.movie-title {
+  width: 180px;
+  font-size: 14px;
+  font-family: Handon3gyeopsal600g;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.popularity {
+  font-size: 12px;
+  font-family: Handon3gyeopsal600g;
+}

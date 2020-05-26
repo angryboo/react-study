@@ -1,0 +1,80 @@
+@font-face {
+  font-family: 'Handon3gyeopsal600g';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_seven@1.2/Handon3gyeopsal600g.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.Header {
+  width: 100vw;
+  background-color: rgb(255, 255, 255);
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  box-shadow: 1px 1px 5px 1px rgba(110, 110, 110, 0.459);
+}
+
+.Title {
+  background: linear-gradient(to right, #5c258d, #62acc7);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: 35px;
+  font-weight: 800;
+  font-family: Handon3gyeopsal600g;
+}
+
+.Nav {
+  display: flex;
+  justify-content: center;
+}
+
+.nav-list {
+  width: 800px;
+  padding-left: 0;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+}
+
+.nav-list>li {}
+
+.nav-button {
+  width: 120px;
+  height: 40px;
+  border: none;
+  color: #fff;
+  border-radius: 5px;
+  font-family: Handon3gyeopsal600g;
+  background: linear-gradient(to right, #5c258d, #4389a2);
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.Main {
+  margin-top: 170px;
+}
+
+.Popular {
+  display: flex;
+  justify-content: center;
+}
+
+.Upcoming {
+  display: flex;
+  justify-content: center;
+}
+
+.Search {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.movie-list {
+  max-width: 1200px;
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  padding-left: 0;
+}
