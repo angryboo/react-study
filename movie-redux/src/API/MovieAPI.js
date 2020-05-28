@@ -17,7 +17,7 @@ export const movies = {
       params: { append_to_response: 'videos' },
     }),
   getPopular: (page) => api.get(`movie/popular?${keyQuery}&page=${page}`),
-  getUpcoming: (page = 1) => api.get(`movie/upcoming?${keyQuery}&page=${page}`),
+  getUpcoming: (page) => api.get(`movie/upcoming?${keyQuery}&page=${page}`),
   getNowPlaying: () => api.get(`movie/now_playing?${keyQuery}`),
   searchMovies: (term) =>
     api.get(`search/movie?${keyQuery}`, {

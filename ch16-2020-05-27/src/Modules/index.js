@@ -1,10 +1,8 @@
 import { combineReducers } from 'redux';
-import Popular from './Poular';
-import Upcoming from './Upcoming';
+import { PhoneReducer } from './Phone';
 
 const rootReducer = combineReducers({
-  Popular,
-  Upcoming,
+  Phone: PhoneReducer,
 });
 
 export default rootReducer;

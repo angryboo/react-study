@@ -1,21 +1,20 @@
 /* eslint-disable import/prefer-default-export */
 // action type
-const INIT = 'POPULAR/INIT';
-const LOADING = 'POPULAR/LOADING';
-const SUCCESS = 'POPULAR/SUCCESS';
-const NEXT_PAGE = 'POPULAR/PAGE';
-const ERROR = 'POPULAR/ERROR';
+const INIT = 'UPCOMING/INIT';
+const LOADING = 'UPCOMING/LOADING';
+const SUCCESS = 'UPCOMING/SUCCESS';
+const NEXT_PAGE = 'UPCOMING/PAGE';
+const ERROR = 'UPCOMING/ERROR';
 
 export const init = () => ({ type: INIT });
 export const loading = () => ({ type: LOADING });
-export const success = (data) => ({ type: SUCCESS, popular: data });
-
+export const success = (data) => ({ type: SUCCESS, upcoming: data });
 export const nextPage = (page) => ({ type: NEXT_PAGE, nextPage: page });
 export const error = (e) => ({ type: ERROR, error: e });
 
 // initial state
 const initialState = {
-  popular: [],
+  upcoming: [],
   nextPage: 1,
   error: {
     state: false,
@@ -25,12 +24,12 @@ const initialState = {
 };
 
 // reducer
-export default function popular(state = initialState, action) {
+export default function upcoming(state = initialState, action) {
   switch (action.type) {
     case INIT:
       console.log('언마운트 시 초기화');
       return {
-        popular: initialState.popular,
+        upcoming: initialState.upcoming,
         nextPage: initialState.nextPage,
         error: { ...initialState.error },
         loading: initialState.loading,
@@ -44,7 +43,7 @@ export default function popular(state = initialState, action) {
       console.log('완료');
       return {
         ...state,
-        popular: [...state.popular, ...action.popular],
+        upcoming: [...state.upcoming, ...action.upcoming],
         nextPage: state.nextPage,
         loading: false,
       };
@@ -54,7 +53,7 @@ export default function popular(state = initialState, action) {
     case ERROR:
       return {
         ...state,
-        error: action.error,
+        error: { ...action.error },
       };
     default:
       return state;

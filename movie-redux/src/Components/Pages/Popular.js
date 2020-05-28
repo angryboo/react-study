@@ -19,6 +19,7 @@ function Popular({ init, popular, loading, nextPage, fetch, setScrollEvent }) {
       document.removeEventListener('scroll', setScrollEvent);
     };
   }, [nextPage]);
+
   return (
     <div className="Popular">
       {loading && <Loading />}

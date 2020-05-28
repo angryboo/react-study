@@ -1,15 +1,15 @@
 /* eslint-disable object-curly-newline */
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import Popular from '../Components/Pages/Popular';
-import { init, loading, success, nextPage, error } from '../Modules/Poular';
+import Upcoming from '../Components/Pages/Upcoming';
+import { init, loading, success, nextPage, error } from '../Modules/Upcoming';
 import { movies } from '../API/MovieAPI';
 
-function PopularContainer() {
-  const { $popular, $loading, $nextPage } = useSelector((state) => ({
-    $popular: state.Popular.popular,
-    $loading: state.Popular.loading,
-    $nextPage: state.Popular.nextPage,
+function UpcomingContainer() {
+  const { $upcoming, $loading, $nextPage } = useSelector((state) => ({
+    $upcoming: state.Upcoming.upcoming,
+    $loading: state.Upcoming.loading,
+    $nextPage: state.Upcoming.nextPage,
   }));
 
   const dispatch = useDispatch();
@@ -20,12 +20,12 @@ function PopularContainer() {
   const onError = () => dispatch(error());
 
   // popular data 취득 함수
-  const fetchPopular = async () => {
-    console.log($nextPage);
+  const fetchUpcoming = async () => {
+    console.log('upcoming', $nextPage);
     onLoading();
     try {
-      const promise = await movies.getPopular($nextPage);
-      console.log(promise);
+      const promise = await movies.getUpcoming($nextPage);
+      console.log(promise.data.results);
       if (promise.status === 200) {
         onSuccess(promise.data.results);
         onNextPage(promise.data.page + 1);
@@ -33,6 +33,7 @@ function PopularContainer() {
         onError(promise.statusText);
       }
     } catch (e) {
+      console.log('error');
       onError(e);
     }
   };
@@ -41,21 +42,20 @@ function PopularContainer() {
   const setScrollEvent = () => {
     const dom = document.documentElement;
     if (dom.scrollTop + dom.clientHeight === dom.offsetHeight) {
-      console.log('스크롤', $nextPage);
-      fetchPopular();
+      fetchUpcoming();
     }
   };
 
   return (
-    <Popular
+    <Upcoming
       init={onInit}
-      popular={$popular}
+      upcoming={$upcoming}
       loading={$loading}
       nextPage={$nextPage}
-      fetch={fetchPopular}
+      fetch={fetchUpcoming}
       setScrollEvent={setScrollEvent}
     />
   );
 }
 
-export default PopularContainer;
+export default UpcomingContainer;
