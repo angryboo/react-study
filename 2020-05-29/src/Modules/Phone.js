@@ -1,8 +1,14 @@
-import { getPhones, getPhoneById, addPhone, deletePhoneById } from '../api'; // api/posts 안의 함수 모두 불러오기
+// api/posts 안의 함수 모두 불러오기
+// saga effect 불러오기
+import { call, put, takeEvery } from 'redux-saga/effects';
+import { getPhones, getPhoneById, addPhone, deletePhoneById } from '../api';
+
 import {
   createPromiseThunk,
+  // createPromiseThunkById,
   // reducerUtils,
   handleAsyncActions,
+  handleAsyncActionsById,
 } from '../Lib/asyncUtils';
 
 /* 액션 타입 */
@@ -30,55 +36,67 @@ const DELETE_PHONE_ERROR = 'DELETE_PHONE_ERROR';
 // thunk 를 사용 할 때, 꼭 모든 액션들에 대하여 액션 생성함수를 만들 필요는 없습니다.
 // 그냥 thunk 함수에서 바로 액션 객체를 만들어주어도 괜찮습니다.
 
-export const getPhonesAsync = createPromiseThunk(GET_PHONES, getPhones);
+// export const getPhonesAsync = createPromiseThunk(GET_PHONES, getPhones);
+// export const getPhoneAsync = createPromiseThunkById(GET_PHONE, getPhoneById);
 
-// export const getPhonesAsync = () => async (dispatch) => {
-//   dispatch({ type: GET_PHONES }); // 요청이 시작됨
-//   try {
-//     const phones = await getPhones(); // API 호출
-//     dispatch({ type: GET_PHONES_SUCCESS, phones }); // 성공
-//   } catch (e) {
-//     dispatch({ type: GET_PHONES_ERROR, error: e }); // 실패
-//   }
-// };
+export const getPhonesAction = () => ({ type: GET_PHONES });
+// payload는 파라미터 용도, meta는 리듀서에서 id를 알기위한 용도
+export const getPhoneAction = (id) => ({
+  type: GET_PHONE,
+  payload: id,
+  meta: id,
+});
 
-// thunk 함수에서도 파라미터를 받아와서 사용 할 수 있습니다.
-export const getPhoneAsync = createPromiseThunk(GET_PHONE, getPhoneById);
-// export const getPhoneAsync = (id) => async (dispatch) => {
-//   dispatch({ type: GET_PHONE }); // 요청이 시작됨
-//   try {
-//     const phone = await getPhoneById(id); // API 호출
-
-//     dispatch({ type: GET_PHONE_SUCCESS, phone }); // 성공
-//   } catch (e) {
-//     dispatch({ type: GET_PHONE_ERROR, error: e }); // 실패
-//   }
-// };
 export const addPhoneAsync = createPromiseThunk(ADD_PHONE, addPhone);
-// export const addPhoneAsync = (newPhone) => async (dispatch) => {
-//   dispatch({ type: ADD_PHONE }); // 요청이 시작됨
-//   try {
-//     const phones = await addPhone(newPhone); // API 호출
-//     console.log("호출 안해?");
-//     console.log(phones);
-//     dispatch({ type: ADD_PHONE_SUCCESS, phones }); // 성공
-//   } catch (e) {
-//     dispatch({ type: ADD_PHONE_ERROR, error: e }); // 실패
-//   }
-// };
 export const deletePhoneAsync = createPromiseThunk(
   DELETE_PHONE,
   deletePhoneById,
 );
-// export const deletePhoneAsync = (id) => async (dispatch) => {
-//   dispatch({ type: DELETE_PHONE });
-//   try {
-//     const phones = await deletePhoneById(id);
-//     dispatch({ type: DELETE_PHONE_SUCCESS, phones });
-//   } catch (e) {
-//     dispatch({ type: DELETE_PHONE_ERROR, error: e });
-//   }
-// };
+
+function* getPhonesSaga() {
+  try {
+    // call 을 사용하면 특정 함수를 호출하고, 결과물이 반환 될 때까지 기다려줄 수 있습니다.
+    const phones = yield call(getPhones);
+    yield put({
+      type: GET_PHONES_SUCCESS,
+      payload: phones,
+    }); // 성공 액션 디스패치
+  } catch (e) {
+    yield put({
+      type: GET_PHONES_ERROR,
+      error: true,
+      payload: e,
+    }); // 실패 액션 디스패치
+  }
+}
+
+// 액션이 지니고 있는 값을 조회하고 싶다면 action을 파라미터로 받아와서 사용 할 수 있습니다.
+function* getPhoneSaga(action) {
+  const param = action.payload;
+  const id = action.meta;
+  try {
+    // API 함수에 넣어주고 싶은 인자는 call 함수의 두번째 인자부터 순서대로 넣어주면 됩니다.
+    const phone = yield call(getPhoneById, param);
+    yield put({
+      type: GET_PHONE_SUCCESS,
+      payload: phone,
+      meta: id,
+    });
+  } catch (e) {
+    yield put({
+      type: GET_PHONE_ERROR,
+      error: true,
+      payload: e,
+      meta: id,
+    });
+  }
+}
+
+// 사가들을 합치기
+export function* aboutPhoneSaga() {
+  yield takeEvery(GET_PHONES, getPhonesSaga);
+  yield takeEvery(GET_PHONE, getPhoneSaga);
+}
 
 const initialState = {
   phones: {
@@ -86,11 +104,7 @@ const initialState = {
     data: null,
     error: null,
   },
-  phone: {
-    loading: false,
-    data: null,
-    error: null,
-  },
+  phone: {},
 };
 
 export const PhoneReducer = (state = initialState, action) => {
@@ -102,7 +116,7 @@ export const PhoneReducer = (state = initialState, action) => {
     case GET_PHONE:
     case GET_PHONE_SUCCESS:
     case GET_PHONE_ERROR:
-      return handleAsyncActions(GET_PHONE, 'phone')(state, action);
+      return handleAsyncActionsById(GET_PHONE, 'phone', true)(state, action);
     case ADD_PHONE:
     case ADD_PHONE_SUCCESS:
     case ADD_PHONE_ERROR:
@@ -114,4 +128,9 @@ export const PhoneReducer = (state = initialState, action) => {
     default:
       return state;
   }
+};
+
+// 3번째 인자를 사용하면 withExtraArgument 에서 넣어준 값들을 사용 할 수 있습니다.
+export const goToHome = () => (dispatch, getState, { history }) => {
+  history.push('/');
 };

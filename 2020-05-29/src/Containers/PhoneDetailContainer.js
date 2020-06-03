@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { getPhoneAsync } from '../Modules/Phone';
+import { getPhoneAction } from '../Modules/Phone';
 import PhoneDetail from '../Components/PhoneDetail';
 
 function PhoneDetailContainer() {
@@ -12,7 +12,7 @@ function PhoneDetailContainer() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getPhoneAsync(id));
+    dispatch(getPhoneAction(id));
   }, [id, dispatch]);
 
   if (loading) return <div>로딩중...</div>;

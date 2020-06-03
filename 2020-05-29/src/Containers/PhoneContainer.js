@@ -2,7 +2,8 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Phone from '../Components/Phone';
 import {
-  getPhonesAsync,
+  getPhonesAction,
+  // getPhonesAsync,
   addPhoneAsync,
   deletePhoneAsync,
 } from '../Modules/Phone';
@@ -18,7 +19,7 @@ function PhoneContainer() {
   };
 
   useEffect(() => {
-    dispatch(getPhonesAsync());
+    dispatch(getPhonesAction());
   }, [dispatch]);
 
   if (loading && !data) return <div>로딩중...</div>;
