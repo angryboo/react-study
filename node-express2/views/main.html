@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Document</title>
+</head>
+
+<body>
+  <img src="/public/11.png" style="width: 300px;" />
+  <h1><%= locals.data.title %></h1>
+  <p><%- locals.data.html %></p>
+  <% for(i=0; i<10; i++) {%>
+  <p>하</p>
+  <% } %>
+  <script>
+    let serverJson = < % -JSON.stringify(locals.data) % > ;
+    console.log(serverJson);
+  </script>
+</body>
+
+</html>
